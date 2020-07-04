@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.authine.cloudpivot.web.api.mapper.FarmingDevelopBankMapper">
+
+    <insert id="saveSaveMonitor" parameterType="list">
+        insert into i29my_save_money_monitor
+        (id,name,creater,createdDeptId,owner,ownerDeptId,createdTime,modifier,modifiedTime,workflowInstanceId,
+        sequenceNo,sequenceStatus,ownerDeptQueryCode,save_money_date,agency,type,today_balance,before_yesterday,
+        month_begin,year_begin,sort_key)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.id},#{item.name},#{item.creater},#{item.createdDeptId},#{item.owner},#{item.ownerDeptId},#{item.createdTime},
+            #{item.modifier},#{item.modifiedTime},#{item.workflowInstanceId},#{item.sequenceNo},#{item.sequenceStatus},
+            #{item.ownerDeptQueryCode},#{item.save_money_date,jdbcType=DATE},
+            #{item.agency},#{item.type},#{item.today_balance},#{item.before_yesterday},#{item.month_begin},#{item.year_begin},#{item.sort_key})
+        </foreach>
+    </insert>
+    <insert id="saveCreditMonitor" parameterType="list">
+        insert into i29my_credit_monitor
+        (id,name,creater,createdDeptId,owner,ownerDeptId,createdTime,modifier,modifiedTime,
+        workflowInstanceId,sequenceNo,sequenceStatus,ownerDeptQueryCode,credit_date,agency,type,today_balance,before_yesterday,
+        month_begin,year_begin,sort_key)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.id},#{item.name},#{item.creater},#{item.createdDeptId},#{item.owner},#{item.ownerDeptId},#{item.createdTime},
+            #{item.modifier},#{item.modifiedTime},#{item.workflowInstanceId},#{item.sequenceNo},#{item.sequenceStatus},
+            #{item.ownerDeptQueryCode},#{item.credit_date,jdbcType=DATE},
+            #{item.agency},#{item.type},#{item.today_balance},#{item.before_yesterday},#{item.month_begin},#{item.year_begin},#{item.sort_key})
+        </foreach>
+    </insert>
+    <insert id="saveCreditDailyAllBank" parameterType="list">
+        insert into i29my_credit_daily_all_bank
+        (id,name,creater,createdDeptId,owner,ownerDeptId,createdTime,modifier,modifiedTime,
+        workflowInstanceId,sequenceNo,sequenceStatus,ownerDeptQueryCode,type,pie_chart_project_intro,abbreviation,project_name,balance,
+        yesterday,last_month,last_quarter,begin_year,begin_year_increment,begin_year_sum_release,cumulative_release,date,sort_key)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.id},#{item.name},#{item.creater},#{item.createdDeptId},#{item.owner},#{item.ownerDeptId},#{item.createdTime},
+            #{item.modifier},#{item.modifiedTime},#{item.workflowInstanceId},#{item.sequenceNo},#{item.sequenceStatus},
+            #{item.ownerDeptQueryCode},#{item.type},#{item.pie_chart_project_intro},
+            #{item.abbreviation},#{item.project_name},#{item.balance},#{item.yesterday},#{item.last_month},#{item.last_quarter},
+            #{item.begin_year},#{item.begin_year_increment},#{item.begin_year_sum_release},#{item.cumulative_release},#{item.date},#{item.sort_key})
+        </foreach>
+    </insert>
+    <delete id="deleteTodaySaveDate">
+        delete
+        from i29my_save_money_monitor
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+    </delete>
+    <delete id="deleteTodayCreditDate">
+        delete
+        from i29my_credit_monitor
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+    </delete>
+    <delete id="deleteCreditDailyAllBankDate">
+        delete
+        from i29my_credit_daily_all_bank
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+
+    </delete>
+    <select id="findTodayDate" resultType="com.authine.cloudpivot.web.api.entity.SaveMonitor">
+        select *
+        from i29my_save_money_monitor
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+        limit 1
+    </select>
+    <select id="findTodayCreditDate" resultType="com.authine.cloudpivot.web.api.entity.CreditMonitor">
+        select *
+        from i29my_credit_monitor
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+        limit 1
+    </select>
+    <select id="findCreditDailyAllBankDate" resultType="com.authine.cloudpivot.web.api.entity.CreditDailyAllBank">
+        select *
+        from i29my_credit_daily_all_bank
+        where DATE_FORMAT(createdTime, '%Y-%M-%D') = DATE_FORMAT(#{createdTime}, '%Y-%M-%D')
+        limit 1
+    </select>
+    <select id="findAttachment" resultType="com.authine.cloudpivot.web.api.entity.Attachment">
+        select *
+        from h_biz_attachment
+        where refId = #{refId}
+          and name = #{name}
+    </select>
+</mapper>
